@@ -1,0 +1,16 @@
+1. 在不适用Sum算子的情况下计算WordCount.
+map, flatMap, process, reduce
+
+2. 读取Kafka主题的数据计算WordCount并存入MySQL.
+(1)自定义
+(2)JdbcSink
+
+3. 介绍一下Flink中的8种传输数据操作.
+keyBy:按照Key的Hash值(相同的Key进入相同的并行度)
+shuffle:随机
+rebalance:全局轮询
+rescale:局部轮询
+global:所有数据发送至同一个并行度
+broadcast:所有数据发送至所有并行度
+forward:要求并行度相同，一对一
+customer:自定义
