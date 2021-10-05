@@ -7,11 +7,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="flink" />
+        <module name="spark-streaming" />
+        <module name="spark-realtime" />
         <module name="scala" />
         <module name="spark" />
-        <module name="spark-realtime" />
         <module name="spark-sql" />
-        <module name="spark-streaming" />
       </profile>
     </annotationProcessing>
   </component>
