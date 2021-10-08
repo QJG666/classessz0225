@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.Random;
 
-public class Flink07_Practice_PageView_Window2 {
+public class Flink02_Practice_PageView_Window2 {
 
     public static void main(String[] args) throws Exception {
 

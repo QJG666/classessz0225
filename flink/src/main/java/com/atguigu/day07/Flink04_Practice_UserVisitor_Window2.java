@@ -23,7 +23,7 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Iterator;
 
-public class Flink09_Practice_UserVisitor_Window2 {
+public class Flink04_Practice_UserVisitor_Window2 {
 
     public static void main(String[] args) throws Exception {
 

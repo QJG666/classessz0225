@@ -35,7 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class Flink10_Practice_ItemCountTopN {
+public class Flink05_Practice_ItemCountTopN {
 
     public static void main(String[] args) throws Exception {
 

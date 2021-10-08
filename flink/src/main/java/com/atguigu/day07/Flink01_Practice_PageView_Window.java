@@ -13,7 +13,7 @@ import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindo
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.util.Collector;
 
-public class Flink06_Practice_PageView_Window {
+public class Flink01_Practice_PageView_Window {
     public static void main(String[] args) throws Exception {
 
         // 1. 获取执行环境
