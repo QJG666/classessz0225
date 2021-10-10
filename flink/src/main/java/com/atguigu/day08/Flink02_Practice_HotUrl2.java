@@ -7,8 +7,8 @@ import org.apache.flink.api.common.eventtime.SerializableTimestampAssigner;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.AggregateFunction;
 import org.apache.flink.api.common.functions.MapFunction;
-import org.apache.flink.api.common.state.ListState;
-import org.apache.flink.api.common.state.ListStateDescriptor;
+import org.apache.flink.api.common.state.MapState;
+import org.apache.flink.api.common.state.MapStateDescriptor;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.datastream.KeyedStream;
@@ -27,8 +27,9 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
 
-public class Flink01_Practice_HotUrl {
+public class Flink02_Practice_HotUrl2 {
 
     public static void main(String[] args) throws Exception {
 
@@ -133,12 +134,12 @@ public class Flink01_Practice_HotUrl {
         }
 
         // 声明状态
-        private ListState<UrlCount1> listState;
+        private MapState<String, UrlCount1> mapState;
 
         @Override
         public void open(Configuration parameters) throws Exception {
 
-            listState = getRuntimeContext().getListState(new ListStateDescriptor<UrlCount1>("list-state", UrlCount1.class));
+            mapState = getRuntimeContext().getMapState(new MapStateDescriptor<String, UrlCount1>("map-state", String.class, UrlCount1.class));
 
         }
 
@@ -146,7 +147,7 @@ public class Flink01_Practice_HotUrl {
         public void processElement(UrlCount1 value, Context ctx, Collector<String> out) throws Exception {
 
             // 将当前数据放置状态
-            listState.add(value);
+            mapState.put(value.getUrl(), value);
 
             // 注册定时器
             ctx.timerService().registerEventTimeTimer(value.getWindowEnd() + 1L);
@@ -160,16 +161,16 @@ public class Flink01_Practice_HotUrl {
         public void onTimer(long timestamp, OnTimerContext ctx, Collector<String> out) throws Exception {
 
             if (timestamp == ctx.getCurrentKey() + 61001L) {
-                listState.clear();
+                mapState.clear();
                 return;
             }
 
             // 取出状态中的数据
-            Iterator<UrlCount1> iterator = listState.get().iterator();
-            ArrayList<UrlCount1> urlCount1s = Lists.newArrayList(iterator);
+            Iterator<Map.Entry<String, UrlCount1>> iterator = mapState.iterator();
+            ArrayList<Map.Entry<String, UrlCount1>> entries = Lists.newArrayList(iterator);
 
             // 排序
-            urlCount1s.sort((o1, o2) -> o2.getCount() - o1.getCount());
+            entries.sort((o1, o2) -> o2.getValue().getCount() - o1.getValue().getCount());
 
             // 取TopN数据
             StringBuilder sb = new StringBuilder();
@@ -178,9 +179,9 @@ public class Flink01_Practice_HotUrl {
                     .append(new Timestamp(timestamp-1L))
                     .append("=================")
                     .append("\n");
-            for (int i = 0; i < Math.min(topSize, urlCount1s.size()); i++) {
+            for (int i = 0; i < Math.min(topSize, entries.size()); i++) {
 
-                UrlCount1 urlCount1 = urlCount1s.get(i);
+                UrlCount1 urlCount1 = entries.get(i).getValue();
 
                 sb.append("Top").append(i + 1);
                 sb.append(" Url:").append(urlCount1.getUrl());
