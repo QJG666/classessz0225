@@ -1,0 +1,33 @@
+package com.atguigu.day12;
+
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
+
+/**
+ * @author qjg
+ * @create 2021-11-29 16:50 11月
+ */
+public class FlinkSQL08_HiveCatalog {
+
+    public static void main(String[] args) {
+
+        // 1. 获取执行环境
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        env.setParallelism(1);
+        StreamTableEnvironment tableEnv = StreamTableEnvironment.create(env);
+
+        // 2. 创建HiveCatalog
+        //HiveCatalog hiveCatalog = new HiveCatalog("myHive", "default", "input");
+
+        // 3. 注册HiveCatalog
+        //tableEnv.registerCatalog("myHive", hiveCatalog);
+
+        // 4. 使用HiveCatalog
+        tableEnv.useCatalog("myHive");
+
+        // 5. 执行查询，查询Hive中已经存在的表数据
+        tableEnv.executeSql("select * from person_info").print();
+
+    }
+
+}
